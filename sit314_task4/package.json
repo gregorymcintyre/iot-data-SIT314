@@ -9,6 +9,7 @@
   "author": "Gregory McIntyre",
   "license": "ISC",
   "dependencies": {
-    "mongoose": "^5.9.26"
+    "mongoose": "^5.9.26",
+    "plotly": "^1.0.6"
   }
 }
