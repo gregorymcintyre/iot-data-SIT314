@@ -25,9 +25,24 @@ function sensortest(){
 		temperature: 20
 	}
 
-	const low = 10;
-	const high = 40;
-	reading = Math.floor(Math.random() * (high - low) + low);
+	const board = new Board();
+	board.on("ready", () => {
+	  const thermometer = new Thermometer({
+	    controller: "LM35",
+	    pin: "A0"
+	  });
+
+	  thermometer.on("change", () => {
+	    const {celsius, fahrenheit, kelvin} = thermometer;
+	    reading = Math.floor(celsius);
+	    //console.log("In: " +reading);
+	  });
+	});
+
+	//const low = 10;
+	//const high = 40;
+	//reading = Math.floor(Math.random() * (high - low) + low);
+	//console.log("out "+ reading);
 	sensordata.temperature = reading;
 
 	const jsonString = JSON.stringify(sensordata);
