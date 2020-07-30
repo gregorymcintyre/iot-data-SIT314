@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const { Board, Thermometer } = require("johnny-five");
 
+var myModule = require('./eg/temperature-lm35.js')
+
 var plotly = require('plotly')("gmcintyre", "tsHRoEapXm8pUhQprdlw")
 
 var data = {
@@ -22,13 +24,17 @@ function sensortest(){
 		name: "temperaturesensor",
 		address: "221 Burwood Hwy, Burwood VIC 3125",
 		time: Date.now(),
-		temperature: 20
+		temperature: 0
 	}
 
-	const low = 10;
-	const high = 40;
-	reading = Math.floor(Math.random() * (high - low) + low);
-	sensordata.temperature = reading;
+	//const low = 10;
+	//const high = 40;
+	//reading = Math.floor(Math.random() * (high - low) + low);
+	//sensordata.temperature = reading;
+	
+	while(myModule.temp==NaN){}	//wait for hardware
+		
+	sensordata.temperature = myModule.temp;
 
 	const jsonString = JSON.stringify(sensordata);
 	//console.log(jsonString);
@@ -50,15 +56,15 @@ function sensortest(){
 		console.log(doc);
 		
 		data.x.push((new Date()).toISOString());
-		data.y.push(time);
-		
-		var graphOptions = {filename: "iot-performance", fileopt:"overwrite"};
+		data.y.push(sensordata.temperature);
+		/*
+		var graphOptions = {filename: "iot-tempsensor", fileopt:"overwrite"};
 		plotly.plot(data, graphOptions, function (err, msg) {
-	
+		
 		if (err) return console.log(err);
 			console.log(msg);
 		});
-		
+		*/
 	}).then(() => {
 		mongoose.connection.close();
 	});

@@ -1,5 +1,6 @@
 const { Board, Thermometer } = require("johnny-five");
 const board = new Board();
+var temp = 20;
 
 board.on("ready", () => {
   const thermometer = new Thermometer({
@@ -9,8 +10,8 @@ board.on("ready", () => {
 
   thermometer.on("change", () => {
     const {celsius, fahrenheit, kelvin} = thermometer;
-    console.log("Thermometer");
     temp = celsius;
-    console.log(temp);
+    exports.temp = temp;
+    //console.log(temp);
   });
 });
