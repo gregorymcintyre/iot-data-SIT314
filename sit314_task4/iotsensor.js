@@ -1,43 +1,37 @@
 const mongoose = require('mongoose');
 const { Board, Thermometer } = require("johnny-five");
-
 var myModule = require('./eg/temperature-lm35.js')
-
 var plotly = require('plotly')("gmcintyre", "tsHRoEapXm8pUhQprdlw")
-
+var reading=0;
 var data = {
 	x: [],
 	y: [],
 	type: "scatter"
 };
-var reading=0;
 
-setInterval(sensortest, 10000);
+sensorsend()
+setInterval(sensorsend, 10000);
+//console.log("fin");
 
-function sensortest(){
+function sensorsend(){
 	time = Date.now();
 	mongoose.connect('mongodb+srv://greg:RRz9GRjRLp37hz3@sit314.bsjyx.mongodb.net/data');
 
 	const Sensor = require('./models/sensor');
 	const sensordata = {
 		id: 0,
-		name: "temperaturesensor",
+		name: "real-temperature-sensor",
 		address: "221 Burwood Hwy, Burwood VIC 3125",
 		time: Date.now(),
-		temperature: 0
+		temperature: 1
 	}
-
-	//const low = 10;
-	//const high = 40;
-	//reading = Math.floor(Math.random() * (high - low) + low);
-	//sensordata.temperature = reading;
 	
 	while(myModule.temp==NaN){}	//wait for hardware
 		
 	sensordata.temperature = myModule.temp;
 
 	const jsonString = JSON.stringify(sensordata);
-	//console.log(jsonString);
+	console.log(jsonString);
 
 	const newSensor = new Sensor({
 		id: sensordata.id,
