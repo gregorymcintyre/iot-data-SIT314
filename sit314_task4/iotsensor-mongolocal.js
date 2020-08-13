@@ -1,7 +1,5 @@
 const mongoose = require('mongoose');
 var mongoClient = require('mongodb').MongoClient;
-//const { Board, Thermometer } = require("johnny-five");
-
 var plotly = require('plotly')("gmcintyre", "tsHRoEapXm8pUhQprdlw")
 
 var mongodata = {
@@ -18,16 +16,12 @@ var localdata = {
 	type: "scatter"
 };
 
-
-
-var reading=0;
-
 setInterval(sensortest, 10000);
 
 function randomTemp(){
 	const low = 10;
 	const high = 40;
-	reading = Math.floor(Math.random() * (high - low) + low);
+	var reading = Math.floor(Math.random() * (high - low) + low);
 	//sensordata.temperature = reading;
 	return reading;
 }
@@ -38,7 +32,7 @@ function sensortest(){
 	mongodata.x.push(now);
 	localdata.x.push(now);
 
-	//Remote MongoDB
+	//***Remote MongoDB
 	mongoTime = Date.now();
 	mongoose.connect('mongodb+srv://greg:RRz9GRjRLp37hz3@sit314.bsjyx.mongodb.net/data');
 
@@ -74,7 +68,7 @@ function sensortest(){
 		mongoose.connection.close();
 	});
 	
-	//Local MongoDB
+	//***Local MongoDB
 	localTime = Date.now();
 	mongoose.connect('mongodb://localhost:27017/db');
 		
@@ -106,18 +100,18 @@ function sensortest(){
 		mongoose.connection.close();
 	});
 
-
-	//ploy.ly
-	console.log("Mongo Data to plot.ly" + JSON.stringify(mongodata));
-	console.log("Local Data to plot.ly" + JSON.stringify(localdata));
+	//***ploy.ly
+	//console.log("Mongo Data to plot.ly" + JSON.stringify(mongodata));
+	//console.log("Local Data to plot.ly" + JSON.stringify(localdata));
 	
 	data = [mongodata, localdata];
+	console.log("Data to plot.ly" + JSON.stringify(data));
 	var graphOptions = {filename: "iot-performance", fileopt:"overwrite"};
-	/*
+	
 	plotly.plot(data, graphOptions, function (err, msg) {
 		
 	if (err) return console.log(err);
-		console.log(msg);
+		//console.log(msg);
 	});
-	*/
+	
 }
