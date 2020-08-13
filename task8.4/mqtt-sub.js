@@ -12,10 +12,11 @@ function checkRegisters(str){
 	
 	altString = substring + 'Altitude';
 	if((altitudeRegister.indexOf(altString) != -1)) {	//check 1st position of multi for values to make sure no doubles
-		if(timeRegister.filter(function (x) { return x.id == substring })=='') {
-			//timeRegister.push(substring);	//TODO: This needs to be multi with Date.now() so we can to a time check!
+		if(timeRegister.filter(function (x) { return x.id == substring })=='') 
 			timeRegister.push({ "id": substring, "time": Date.now() });
-		}
+		else
+			if(timeRegister.filter(function (x) { return x.id == substring })[0].time-Date.now() > 600000) 
+				console.log('Alert: A drone has been stationary for more than 10 minutes, at an altitude above 100')
 	}else{
 		timeRegister.splice(timeRegister.indexOf(timeRegister.filter(function (x) { return x.id == substring })));
 	}
