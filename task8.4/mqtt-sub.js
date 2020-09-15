@@ -13,9 +13,9 @@ function checkRegisters(str){
 	altString = substring + 'Altitude';
 	if((altitudeRegister.indexOf(altString) != -1)) {	//check 1st position of multi for values to make sure no doubles
 		if(timeRegister.filter(function (x) { return x.id == substring })=='') 
-			timeRegister.push({ "id": substring, "time": Date.now() });
+			timeRegister.push({ "id": substring, "time": Date.now()+600000 });
 		else
-			if(timeRegister.filter(function (x) { return x.id == substring })[0].time-Date.now() > 600000) 
+			if(timeRegister.filter(function (x) { return x.id == substring })[0].time-Date.now() > 600000) 		//ms error for processing
 				console.log('Alert: A drone has been stationary for more than 10 minutes, at an altitude above 100')
 	}else{
 		timeRegister.splice(timeRegister.indexOf(timeRegister.filter(function (x) { return x.id == substring })));
@@ -45,9 +45,10 @@ client.on('message', (topic, message, packet) => {
 				console.log("Alert: Two or more drones have low batteries");
 			}else{
 				batteryRegister.push(topic);
-
 			}
 		}
+		console.log('batteryRegister: ')
+		console.log(batteryRegister);
 	}
 	
 	//Publish an alert if a drone has been stationary for more than 10 minutes, at an altitude above 100
